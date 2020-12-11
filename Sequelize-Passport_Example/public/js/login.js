@@ -1,39 +1,38 @@
 $(document).ready(() => {
   // Getting references to our form and inputs
-  const loginForm = $("form.login");
-  const emailInput = $("input#email-input");
-  const passwordInput = $("input#password-input");
+  const sellerform = $("form.item");
+  const sellername = $("input#seller-name-input");
+  const itemdescription = $("input#item-input");
+  const askingprice = $("input#price-input");
 
-  // When the form is submitted, we validate there's an email and password entered
-  loginForm.on("submit", event => {
+  // When the form is submitted, we validate there's an sellername and password entered
+  sellerform.on("submit", event => {
     event.preventDefault();
-    const userData = {
-      email: emailInput.val().trim(),
-      password: passwordInput.val().trim()
+    const newitem = {
+      sellername: sellername.val().trim(),
+      itemforsale: itemdescription.val().trim(),
+      askingprice: askingprice.val().trim(),
     };
 
-    if (!userData.email || !userData.password) {
-      return;
-    }
+    console.log(newitem)
 
-    // If we have an email and password we run the loginUser function and clear the form
-    loginUser(userData.email, userData.password);
-    emailInput.val("");
-    passwordInput.val("");
+    $.ajax("/api/newitem", {
+      type: "POST",
+      data: newitem
+  }).then(function () {
+      console.log("Added a New Item");
+      location.reload();
+  })
+
+
+});
+
+  // Empty each input box by replacing the value with an empty string
+ 
+
+    // If we have an sellername and password we run the loginUser function and clear the form
+  
   });
 
   // loginUser does a post to our "api/login" route and if successful, redirects us the the members page
-  function loginUser(email, password) {
-    $.post("/api/login", {
-      email: email,
-      password: password
-    })
-      .then(() => {
-        window.location.replace("/members");
-        // If there's an error, log the error
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-});
+  
